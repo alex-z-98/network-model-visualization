@@ -56,6 +56,15 @@
     top: 250px;
   }
 
+  .close-popup{
+    margin-left: 5px;
+    font-size: 15px;
+    color: rgb(153, 17, 24);
+    font-family: Arial;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
   </style>
 
 <script src="https://d3js.org/d3.v5.min.js"></script>
@@ -146,7 +155,7 @@ function ApplyChanges(d)
     //alert(propertyRaws[i].getElementsByClassName("name")[0].value);
     newkey = propertyRaws[i].getElementsByClassName("name")[0].value;
     valuekey = propertyRaws[i].getElementsByClassName("value")[0].value;
-    d.info[newkey]=valuekey;
+    if (newkey != "") d.info[newkey]=valuekey;
     i++;
   }
 }
@@ -165,8 +174,18 @@ function AddProperty()
     .attr("placeholder", "value")
     .attr("class", "value");
 
+  row.append("span")
+    .attr("class", "close-popup")
+    .html("&times")
+    .attr("onclick", "CloseRow(this)");
+
   d3.selectAll("button.apply")
     .raise();
+}
+
+function CloseRow(e)
+{
+  e.parentNode.parentNode.removeChild(e.parentNode);
 }
 
 function Change(d)
@@ -191,6 +210,11 @@ function Change(d)
     row.append("input")
       .attr("value", d.info[key])
       .attr("class", "value");
+
+    row.append("span")
+      .attr("class", "close-popup")
+      .html("&times")
+      .attr("onclick", "CloseRow(this)");
 
     //infoRed.append("br");
   }
