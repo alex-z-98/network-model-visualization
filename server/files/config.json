@@ -1,0 +1,200 @@
+[
+    [
+        {
+            "father": null,
+            "elems": [
+                {
+                    "type": "block",
+                    "name": "First room",
+                    "image": "block.png",
+                    "info": {
+                        "name": "First room",
+                        "type": "room",
+                        "PCquantity": "3"
+                    },
+                    "x": 273,
+                    "y": 279,
+                    "child": 0
+                },
+                {
+                    "type": "block",
+                    "name": "Second room",
+                    "image": "block.png",
+                    "info": {
+                        "name": "Second room",
+                        "type": "room",
+                        "PCquantity": "2"
+                    },
+                    "x": 274,
+                    "y": 58,
+                    "child": 1
+                },
+                {
+                    "type": "comut",
+                    "name": "First comut",
+                    "image": "comut1.png",
+                    "x": 89,
+                    "y": 170
+                },
+                {
+                    "image": "block.png",
+                    "x": 466,
+                    "y": 170,
+                    "info": {
+                        "name": "Block"
+                    },
+                    "child": 2
+                },
+                {
+                    "image": "block.png",
+                    "x": 465,
+                    "y": 362
+                },
+                {
+                    "image": "block.png",
+                    "x": 91,
+                    "y": 36
+                }
+            ],
+            "lines": [
+                {
+                    "source": 2,
+                    "target": 0
+                },
+                {
+                    "source": 2,
+                    "target": 1
+                },
+                {
+                    "source": 0,
+                    "target": 3
+                },
+                {
+                    "source": 1,
+                    "target": 3
+                },
+                {
+                    "source": 0,
+                    "target": 4
+                },
+                {
+                    "source": 5,
+                    "target": 2
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "father": 0,
+            "elems": [
+                {
+                    "type": "PC",
+                    "name": "PC1",
+                    "image": "block.png",
+                    "id": 11,
+                    "x": 248,
+                    "y": 99
+                },
+                {
+                    "type": "PC",
+                    "name": "PC2",
+                    "image": "block.png",
+                    "id": 12,
+                    "x": 100,
+                    "y": 100
+                },
+                {
+                    "type": "PC",
+                    "name": "PC3",
+                    "image": "block.png",
+                    "id": 13,
+                    "x": 400,
+                    "y": 100
+                }
+            ],
+            "lines": []
+        },
+        {
+            "father": 0,
+            "elems": [
+                {
+                    "type": "PC",
+                    "name": "PC1",
+                    "image": "block.png",
+                    "id": 21,
+                    "x": 204,
+                    "y": 62
+                },
+                {
+                    "type": "PC",
+                    "name": "PC2",
+                    "image": "block.png",
+                    "id": 22,
+                    "x": 340,
+                    "y": 70.00000381469727
+                }
+            ],
+            "lines": [
+                {
+                    "source": 1,
+                    "target": 0
+                }
+            ]
+        },
+        {
+            "father": 0,
+            "elems": [
+                {
+                    "image": "block.png",
+                    "x": 365,
+                    "y": 116,
+                    "child": 0
+                },
+                {
+                    "image": "block.png",
+                    "x": 164,
+                    "y": 192
+                }
+            ],
+            "lines": [
+                {
+                    "source": 1,
+                    "target": 0
+                }
+            ]
+        }
+    ],
+    [
+        {
+            "father": 2,
+            "elems": [
+                {
+                    "image": "block.png",
+                    "x": 193,
+                    "y": 110.00000762939453,
+                    "hide": true
+                },
+                {
+                    "image": "block.png",
+                    "x": 431,
+                    "y": 100.00000762939453,
+                    "info": {
+                        "Hello": "World"
+                    }
+                },
+                {
+                    "image": "block.png",
+                    "x": 314,
+                    "y": 37.999996185302734
+                }
+            ],
+            "lines": [
+                {
+                    "source": 1,
+                    "target": 2
+                }
+            ]
+        }
+    ]
+]
