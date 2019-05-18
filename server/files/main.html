@@ -12,6 +12,8 @@
     position:absolute;
     background:white;
     top:50px;
+    padding-left: none;
+    margin-left: none;
   }
 
   .tabl{
@@ -53,7 +55,7 @@
     position: absolute;
     background: white;
     left: 300px;
-    top: 250px;
+    top: 150px;
   }
 
   .close-popup{
@@ -65,7 +67,82 @@
     cursor: pointer;
   }
 
-  </style>
+
+
+
+
+.carousel {
+  position: absolute;
+  width: 398px;
+  padding: 10px 40px;
+  border: 1px solid #CCC;
+  border-radius: 15px;
+  background: #eee;
+  left: 300px;
+  top: 150px;
+}
+
+.carousel img {
+  width: 130px;
+  height: 130px;
+  /* по умолчанию inline, в ряде браузеров это даст лишнее пространство вокруг элементов */
+
+  display: block;
+}
+
+.arrow {
+  position: absolute;
+  top: 60px;
+  padding: 0;
+  background: #ddd;
+  border-radius: 15px;
+  border: 1px solid gray;
+  font-size: 24px;
+  line-height: 24px;
+  color: #444;
+  display: block;
+}
+
+.arrow:focus {
+  outline: none;
+}
+
+.arrow:hover {
+  background: #ccc;
+  cursor: pointer;
+}
+
+.prev {
+  left: 7px;
+}
+
+.next {
+  right: 7px;
+}
+
+.gallery {
+  width: 390px;
+  overflow: hidden;
+}
+
+.gallery ul {
+  height: 130px;
+  width: 9999px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transition: margin-left 250ms;
+  /* remove white-space between inline-block'ed li */
+  /* http://davidwalsh.name/remove-whitespace-inline-block */
+
+  font-size: 0;
+}
+
+.gallery li {
+  display: inline-block;
+}
+ 
+</style>
 
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
@@ -74,7 +151,7 @@
 <body>
     
     <div>
-        <input type="search" name="Поиск" placeholder="Поиск" value=" " id="search">   
+        <input type="search" name="Поиск" placeholder="Поиск" id="search">   
         <input type="submit" value="Search" class="search" onclick="SearchID(document.getElementById('search').value)">
         <button onclick="AddObject()">Add</button>
         <button onclick="AddLink()">Connect</button>
@@ -85,14 +162,51 @@
 
 document.body.oncontextmenu = function(e){ return false; };
 
-var w=900,
-  h=500,
-  wsize=50,
-  hsize=30,
+var w=1272,
+  h=550,
+  wsize=100,
+  hsize=60,
   infow=100,
   current=undefined,
   currentlvl=undefined,
-  linkFlag=false;
+  linkFlag=false
+  images=["block.png", "door.png", "comut.png", "energy.png", "comut1.png", "rect.png"];
+
+
+  class Carousel {
+    constructor( { width, count, elem } ) {
+      this.width = width;
+      this.count = count;
+      this.elem = elem;
+      
+      this.list = elem.querySelector('ul');
+      this.listElems = elem.querySelectorAll('li');
+      
+      this.position = 0;
+      
+      this.prevButton = elem.querySelector('.prev');
+      this.nextButton = elem.querySelector('.next');
+      
+      this.prevButton.onclick = () => this.prevClick();
+      this.nextButton.onclick = () => this.nextClick();
+    }
+    
+    
+    prevClick() {
+        // сдвиг влево
+        // последнее передвижение влево может быть не на 3, а на 2 или 1 элемент
+        this.position = Math.min(this.position + this.width * this.count, 0)
+        this.list.style.marginLeft = this.position + 'px';
+    }
+    
+    nextClick() {
+        // сдвиг вправо
+        // последнее передвижение вправо может быть не на 3, а на 2 или 1 элемент
+        this.position = Math.max(this.position - this.width * this.count, -this.width * (this.listElems.length - this.count));
+        this.list.style.marginLeft = this.position + 'px';
+    }
+    
+  }
 
 //var L0={father: null, elems:[{type:"block", name:"First room", image:"block.png", info:{name:"First room", type:"room", PCquantity:"3"}, x:200, y:200},{type:"block", name:"Second room", image:"block.png", info:{name:"Second room", type:"room", PCquantity:"2"}, x:200, y:100}, {type:"comut", name:"First comut", image:"comut1.png", x:100, y:150}]};
 //L0.lines=[{source: L0.elems[2], target: L0.elems[0]}, {source: L0.elems[2], target: L0.elems[1]}];
@@ -124,8 +238,51 @@ function onAjaxSuccess(data)
 
 function AddObject()
 {
-  current.elems.push({image:"block.png", x:300, y:250});
-  Draw(current, currentlvl);
+  d3.select("div.carousel")
+    .remove();
+
+  d3.selectAll("fieldset")
+    .remove();
+
+  var carousel=d3.select("div.canvas")
+                .append("div")
+                .attr("id", "carousel")
+                .attr("class", "carousel");
+
+  carousel.append("button")
+          .attr("class", "arrow prev")
+          .html("⇦");
+
+  var ul=carousel.append("div")
+    .attr("class", "gallery")
+    .append("ul")
+    .attr("class", "images");
+
+  ul.selectAll("li")
+    .data(images)
+    .enter()
+    .append("li")
+    .append("img")
+    .attr("src", function(d){return d;})
+    .on("click", function(d){
+      d3.select("div.selectImg")
+        .remove();
+      current.elems.push({image:d, x:300, y:250});
+      Draw(current, currentlvl);  
+    });
+
+  carousel.append("button")
+        .attr("class", "arrow next")
+        .html("⇨");
+
+  let car = new Carousel( {
+    width: 130,
+    count: 3,
+    elem: document.getElementById('carousel')
+  } );
+
+  //current.elems.push({image:"block.png", x:300, y:250});
+  //Draw(current, currentlvl);
 }
 
 function AddLink()
@@ -250,6 +407,12 @@ function CloseRow(e)
 
 function Change(d)
 {
+  d3.select("div.carousel")
+    .remove();
+
+  d3.selectAll("fieldset")
+    .remove();
+
   K=d;
 
   var infoRed=d3.select("div.canvas")
@@ -353,7 +516,7 @@ function Draw(L, Lindex, i=-1)
         .enter()
         .append("image")
         .attr("class", function(d){ if (d.hide==true) return "hide"; return d.type;})
-        .attr("xlink:href", function(d){ return d.image;})
+        .attr("xlink:href", function(d){return d.image;})
         .attr("x", function(d){ return d.x;})
         .attr("y", function(d){ return d.y;})
         .attr("width", wsize)
