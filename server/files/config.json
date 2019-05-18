@@ -4,9 +4,9 @@
             "father": null,
             "elems": [
                 {
-                    "type": "block",
+                    "type": "room",
                     "name": "First room",
-                    "image": "block.png",
+                    "image": "door.png",
                     "info": {
                         "name": "First room",
                         "type": "room",
@@ -17,29 +17,29 @@
                     "child": 0
                 },
                 {
-                    "type": "block",
+                    "type": "room",
                     "name": "Second room",
-                    "image": "block.png",
+                    "image": "door.png",
                     "info": {
                         "name": "Second room",
                         "type": "room",
                         "PCquantity": "2"
                     },
-                    "x": 274,
-                    "y": 58,
+                    "x": 269,
+                    "y": 65,
                     "child": 1
                 },
                 {
-                    "type": "comut",
+                    "type": "energy block",
                     "name": "First comut",
-                    "image": "comut1.png",
+                    "image": "energy.png",
                     "x": 89,
                     "y": 170
                 },
                 {
                     "image": "block.png",
-                    "x": 466,
-                    "y": 170,
+                    "x": 488,
+                    "y": 131,
                     "info": {
                         "name": "Block"
                     },
@@ -47,8 +47,8 @@
                 },
                 {
                     "image": "block.png",
-                    "x": 465,
-                    "y": 362
+                    "x": 487,
+                    "y": 328
                 },
                 {
                     "image": "block.png",
@@ -124,7 +124,7 @@
                     "image": "block.png",
                     "id": 21,
                     "x": 204,
-                    "y": 62
+                    "y": 61
                 },
                 {
                     "type": "PC",
@@ -133,12 +133,25 @@
                     "id": 22,
                     "x": 340,
                     "y": 70.00000381469727
+                },
+                {
+                    "image": "comut.png",
+                    "x": 268,
+                    "y": 204
                 }
             ],
             "lines": [
                 {
                     "source": 1,
                     "target": 0
+                },
+                {
+                    "source": 2,
+                    "target": 0
+                },
+                {
+                    "source": 2,
+                    "target": 1
                 }
             ]
         },
