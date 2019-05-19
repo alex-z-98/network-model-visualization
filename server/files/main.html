@@ -53,7 +53,7 @@
 
   .infoRed{
     position: absolute;
-    background: white;
+    background: #eee;
     left: 300px;
     top: 150px;
   }
@@ -156,6 +156,7 @@
         <button onclick="AddObject()">Add</button>
         <button onclick="AddLink()">Connect</button>
         <button onclick="Save()">Save</button>
+        <button id="Undo" onclick="Undo()" disabled>Undo</button>
     </div>
 
 <script>
@@ -170,7 +171,12 @@ var w=1272,
   current=undefined,
   currentlvl=undefined,
   linkFlag=false
-  images=["block.png", "door.png", "comut.png", "energy.png", "comut1.png", "rect.png"];
+  images=["block.png", "door.png", "comut.png", "energy.png", "server.png", "comut1.png", "rect.png"];
+
+var preMODEL={}, preMODELlvl, preMODELnode;
+
+preMODEL.elems=[];
+preMODEL.lines=[];
 
 
   class Carousel {
@@ -236,6 +242,32 @@ function onAjaxSuccess(data)
   Draw(MODEL[0][0], 0);
 }
 
+function SaveMODEL()
+{
+  preMODEL.father=current.father;
+  preMODEL.elems=[];
+  preMODEL.lines=[];
+  for (var key in current.elems)
+  {
+    preMODEL.elems[key]={};
+    for (var item in current.elems[key])
+    {
+      //alert(item);
+      preMODEL.elems[key][item]=current.elems[key][item];
+    } 
+  } 
+  for (var key in current.lines)
+  {
+    preMODEL.lines[key]={};
+    for (var item in current.lines[key])
+    {
+      preMODEL.lines[key][item]=current.lines[key][item];
+    }
+  }
+  preMODELlvl=currentlvl;
+  preMODELnode=MODEL[currentlvl].indexOf(current);
+}
+
 function AddObject()
 {
   d3.select("div.carousel")
@@ -243,6 +275,9 @@ function AddObject()
 
   d3.selectAll("fieldset")
     .remove();
+
+  document.getElementById('Undo').disabled=false;
+  SaveMODEL();
 
   var carousel=d3.select("div.canvas")
                 .append("div")
@@ -287,6 +322,8 @@ function AddObject()
 
 function AddLink()
 {
+  SaveMODEL();
+
   d3.selectAll("image")
     .on("click", function(d){
       linkFlag =! linkFlag;
@@ -306,6 +343,7 @@ function AddLink()
         Draw(current, currentlvl);
       }
     })
+  document.getElementById('Undo').disabled=false;
 }
 
 function SearchID(value)
@@ -467,6 +505,26 @@ function Save()
   request.send(JSON.stringify(MODEL, "", 4));
 }
 
+function Undo()
+{
+  //alert(preMODELlvl);
+  //alert(preMODELnode);
+  MODEL[preMODELlvl][preMODELnode].elems=[];
+  MODEL[preMODELlvl][preMODELnode].lines=[];
+  for (var key in preMODEL.elems)
+    MODEL[preMODELlvl][preMODELnode].elems[key]=preMODEL.elems[key];  
+  for (var key in preMODEL.lines)
+    MODEL[preMODELlvl][preMODELnode].lines[key]=preMODEL.lines[key];
+  MODEL[preMODELlvl][preMODELnode].lines = MODEL[preMODELlvl][preMODELnode].lines.filter(function(x) {
+    return x !== undefined && x !== null; 
+  });
+  MODEL[preMODELlvl][preMODELnode].elems = MODEL[preMODELlvl][preMODELnode].elems.filter(function(x) {
+    return x !== undefined && x !== null; 
+  });
+  document.getElementById('Undo').disabled=true;
+  Draw(MODEL[preMODELlvl][preMODELnode], preMODELlvl);
+}
+
 function Draw(L, Lindex, i=-1)
 {
     current=L;
@@ -522,11 +580,9 @@ function Draw(L, Lindex, i=-1)
         .attr("width", wsize)
         .attr("height", hsize)
         .on("click", function(d){
-          //alert(L0[4])
           if (d3.event.ctrlKey)
           {
-            //alert(L.elems[L.elems.indexOf(d)].name);
-            //alert(d.name);
+            SaveMODEL();
             L.lines.forEach(function(item, i, arr){
               if (item.source==L.elems.indexOf(d) || item.target==L.elems.indexOf(d))
               {
@@ -547,8 +603,11 @@ function Draw(L, Lindex, i=-1)
 
             svg.selectAll(".searched")
                 .remove();
+
+            
+            document.getElementById('Undo').disabled=false;
           }
-          if (d3.event.altKey)
+          else if (d3.event.altKey)
           {
             if (MODEL[Lindex+1]==undefined) MODEL[Lindex+1]=[];
             MODEL[Lindex+1].push({father:MODEL[Lindex].indexOf(L), elems:[], lines:[]});
